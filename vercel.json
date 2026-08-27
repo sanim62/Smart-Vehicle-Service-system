@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "npm install && npm run build",
+  "buildCommand": "npm install --foreground-scripts && npm run build",
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {
