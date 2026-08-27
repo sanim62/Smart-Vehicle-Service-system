@@ -64,7 +64,20 @@ config([
     'view.compiled' => $storagePath . '/framework/views',
     'cache.stores.file.path' => $storagePath . '/framework/cache/data',
     'session.files' => $storagePath . '/framework/sessions',
+    'session.driver' => env('SESSION_DRIVER', 'cookie'),
 ]);
 
-$app->handleRequest(Request::capture());
+try {
+    $request = Request::capture();
+    $response = $app->handleRequest($request);
+    $response->send();
+} catch (\Throwable $e) {
+    http_response_code(500);
+    header('Content-Type: text/html; charset=utf-8');
+    echo '<h2>Laravel Application Error</h2>';
+    echo '<p><strong>Message:</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
+    echo '<p><strong>File:</strong> ' . htmlspecialchars($e->getFile()) . ':' . $e->getLine() . '</p>';
+    echo '<pre style="background:#1e1e1e;color:#fff;padding:15px;border-radius:8px;overflow:auto;">' . htmlspecialchars($e->getTraceAsString()) . '</pre>';
+}
+
 
