@@ -1,9 +1,27 @@
 <?php
 
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        http_response_code(500);
+        header('Content-Type: text/html; charset=utf-8');
+        echo '<div style="font-family:sans-serif;padding:20px;background:#fef2f2;border:1px solid #ef4444;border-radius:8px;">';
+        echo '<h3 style="color:#b91c1c;margin-top:0;">Fatal PHP Startup Error</h3>';
+        echo '<p><strong>Message:</strong> ' . htmlspecialchars($error['message']) . '</p>';
+        echo '<p><strong>File:</strong> ' . htmlspecialchars($error['file']) . ' (Line ' . $error['line'] . ')</p>';
+        echo '</div>';
+    }
+});
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
+
 
 // ─── Vercel: filesystem is read-only except /tmp ───────────────────────────
 // Create writable directories in /tmp for Laravel's framework files
