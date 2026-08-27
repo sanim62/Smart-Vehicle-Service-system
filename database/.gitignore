@@ -1,1 +1,1 @@
-*.sqlite*
+# sqlite files are now tracked for Vercel deployment
