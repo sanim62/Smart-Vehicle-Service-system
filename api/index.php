@@ -55,5 +55,16 @@ require __DIR__ . '/../vendor/autoload.php';
 /** @var Application $app */
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
+// Explicitly configure storage path on the application instance
+$app->useStoragePath($storagePath);
+
+// Ensure config uses the writable sqlite database in /tmp
+config([
+    'database.connections.sqlite.database' => '/tmp/database.sqlite',
+    'view.compiled' => $storagePath . '/framework/views',
+    'cache.stores.file.path' => $storagePath . '/framework/cache/data',
+    'session.files' => $storagePath . '/framework/sessions',
+]);
+
 $app->handleRequest(Request::capture());
 
