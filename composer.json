@@ -71,7 +71,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "yajra/laravel-oci8"
+            ]
         }
     },
     "config": {

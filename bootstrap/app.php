@@ -6,12 +6,20 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Auth;
 
-return Application::configure(basePath: dirname(__DIR__))
+$storagePath = env('LARAVEL_STORAGE_PATH') ?: (isset($_ENV['LARAVEL_STORAGE_PATH']) ? $_ENV['LARAVEL_STORAGE_PATH'] : null);
+
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
-    )
+    );
+
+if ($storagePath) {
+    $app->useStoragePath($storagePath);
+}
+
+return $app
     ->withMiddleware(function (Middleware $middleware) {
         // Register the 'admin' middleware alias
         $middleware->alias([
