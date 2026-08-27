@@ -29,11 +29,19 @@ if (!file_exists($dbDest) && file_exists($dbSource)) {
     copy($dbSource, $dbDest);
 }
 
-// Override the storage path to /tmp
-$_ENV['STORAGE_PATH']      = $storagePath;
-$_SERVER['STORAGE_PATH']   = $storagePath;
+// Tell Laravel to use /tmp/storage as the storage path
+// LARAVEL_STORAGE_PATH is the official Laravel env variable for this
+putenv('LARAVEL_STORAGE_PATH=' . $storagePath);
+$_ENV['LARAVEL_STORAGE_PATH']    = $storagePath;
+$_SERVER['LARAVEL_STORAGE_PATH'] = $storagePath;
+
+// Point DB to the writable /tmp copy
+putenv('DB_DATABASE=/tmp/database.sqlite');
+$_ENV['DB_DATABASE']    = '/tmp/database.sqlite';
+$_SERVER['DB_DATABASE'] = '/tmp/database.sqlite';
 
 // ───────────────────────────────────────────────────────────────────────────
+
 
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__ . '/../storage/framework/maintenance.php')) {
